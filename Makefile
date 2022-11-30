@@ -1,11 +1,11 @@
 PROJECT_ROOT := $(shell pwd)
 
 # Location of ARM GCC toolchain binaries
-TOOLSPATH ?= /opt/gcc-arm-none-eabi-10-2020-q4-major/bin
+TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin"
 
 # STM32 board specification
 ARMCPU   := cortex-m3
-STM32MCU := STM32F103x6
+STM32MCU := STM32F103x8
 LINKERSCRIPT = scripts/STM32F103X6_FLASH.ld
 
 # Project directories
