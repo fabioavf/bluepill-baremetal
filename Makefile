@@ -1,9 +1,15 @@
 PROJECT_ROOT := $(shell pwd)
 
 # Location of ARM GCC toolchain binaries
-# TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin" #win
-# TOOLSPATH ?= "/Applications/ARM/bin" #desktop macos
-TOOLSPATH ?= "/Applications/ArmGNUToolchain/12.2.mpacbti-bet1/arm-none-eabi/bin" #macbook
+
+# Windows
+# TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin"
+
+# macOS
+# TOOLSPATH ?= "/Applications/ARM/bin"
+
+# alternative macOS
+TOOLSPATH ?= "/Applications/ArmGNUToolchain/12.2.mpacbti-bet1/arm-none-eabi/bin"
 
 
 # STM32 board specification

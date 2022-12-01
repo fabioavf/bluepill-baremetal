@@ -17,9 +17,12 @@ int main(void) {
     lcd_init();
     delay_ms(100);
 
+    lcd_print("Hello world!");
+
     while (1) {
-        if (!(GPIOB->IDR & RPB_SW1)) {                       // if sw1 pressed
-            GPIOA->ODR |= (RPA_LED1 | RPA_LED2 | RPA_LED3);  // turn on leds
+        if (!(GPIOB->IDR & RPB_SW1) || !(GPIOB->IDR & RPB_SW2)) {  // if sw1 pressed
+            GPIOA->ODR |= (RPA_LED1 | RPA_LED2 | RPA_LED3);        // turn on leds
+
         } else {
             GPIOA->ODR &= ~(RPA_LED1 | RPA_LED2 | RPA_LED3);  // turn off leds
         }
