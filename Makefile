@@ -1,7 +1,9 @@
 PROJECT_ROOT := $(shell pwd)
 
 # Location of ARM GCC toolchain binaries
-TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin"
+# TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin" #win
+TOOLSPATH ?= /Applications/ARM/bin#macos
+
 
 # STM32 board specification
 ARMCPU   := cortex-m3

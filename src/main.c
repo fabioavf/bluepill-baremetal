@@ -31,10 +31,10 @@ int main(void) {
 
     while (1) {
         GPIOA->ODR |= 0x00000007;  // led on
-        delay_ms(50);
+        delay_ms(200);
 
         GPIOA->ODR &= 0xFFFFFFF8;  // led off
-        delay_ms(50);
+        delay_ms(200);
     }
 
     /* Will never reach this return */
