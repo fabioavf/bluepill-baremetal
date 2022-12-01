@@ -30,17 +30,17 @@ There is also a rule, `clean`, which deletes all build artefacts.
 
 Here is a brief description of the files here.
 
-Directory | Filename | Description
-:-------- | :------- | :----------
-.         | Makefile | The Makefile, which compiles the code. The goals are 'app' (the default), which compiles the application, and 'clean', which deletes the build artefacts.
-cmsis     | *many*   | CMSIS files; Interface files for the Cortex-M3 ARM CPU core.
-inc       | stm32f1xx.h | A header for all STM32F1xx series chips. It doesn't do much, apart from include the more specific header file (e.g. stm32f103x6.h).
-inc       | stm32f103x6.h | A header for STM32F103x6 chips, such as the STM32F103C6. This provides a lot of interface details for user scripts, like registers and interrupts.
-inc       | system_stm32f1xx.h | The header for the system file, system_stm32f1xx.c.
-scripts   | STM32F103X6_FLASH.ld | The linkerscript, which describes the memory layout of the chip, and defines the entrypoint of the program.
-src       | main.c | The user-created app. In this case, all it does is set up GPIO peripheral C, and enable/disable pin PC13 in a loop. Since the STM32F103C6 Blue Pill has a built-in LED on this pin, this causes the LED to blink.
-src       | system_stm32f1xx.c | Provides system definitions and functions, such as setting up the clock.
-startup   | startup_stm32f103x6.s | Startup code, such as initialising the data sections for a C program, and defining the interrupts.
+| Directory | Filename              | Description                                                                                                                                                                                                       |
+| :-------- | :-------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| .         | Makefile              | The Makefile, which compiles the code. The goals are 'app' (the default), which compiles the application, and 'clean', which deletes the build artefacts.                                                         |
+| cmsis     | _many_                | CMSIS files; Interface files for the Cortex-M3 ARM CPU core.                                                                                                                                                      |
+| inc       | stm32f1xx.h           | A header for all STM32F1xx series chips. It doesn't do much, apart from include the more specific header file (e.g. stm32f103x6.h).                                                                               |
+| inc       | stm32f103x6.h         | A header for STM32F103x6 chips, such as the STM32F103C6. This provides a lot of interface details for user scripts, like registers and interrupts.                                                                |
+| inc       | system_stm32f1xx.h    | The header for the system file, system_stm32f1xx.c.                                                                                                                                                               |
+| scripts   | STM32F103X6_FLASH.ld  | The linkerscript, which describes the memory layout of the chip, and defines the entrypoint of the program.                                                                                                       |
+| src       | main.c                | The user-created app. In this case, all it does is set up GPIO peripheral C, and enable/disable pin PC13 in a loop. Since the STM32F103C6 Blue Pill has a built-in LED on this pin, this causes the LED to blink. |
+| src       | system_stm32f1xx.c    | Provides system definitions and functions, such as setting up the clock.                                                                                                                                          |
+| startup   | startup_stm32f103x6.s | Startup code, such as initialising the data sections for a C program, and defining the interrupts.                                                                                                                |
 
 ## What happens in the Makefile?
 
@@ -70,6 +70,12 @@ If using these drivers, the `st-flash` utility can be used to flash the built bi
 
 ```
 st-flash write build/blinky.bin 0x8000000
+```
+
+**Note:** for STM32F103C8T6 (Blue Pill), use:
+
+```
+st-flash write build/blinky.bin 0x08000000
 ```
 
 Other programmers include ST-LINK V2 programmers from ST (the makers of the STM32F103C6 chip), and J-Link programmers from SEGGER, which can use the SWD interface (pins SWDIO and SWDCLK on the board).
