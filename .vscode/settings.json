@@ -2,6 +2,7 @@
   "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
   "C_Cpp.errorSquiggles": "Disabled",
   "files.associations": {
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "red_pill.h": "c"
   }
 }

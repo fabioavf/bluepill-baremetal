@@ -72,7 +72,7 @@ extern "C" {
     !defined(STM32F10X_HD) && !defined(STM32F10X_HD_VL) && !defined(STM32F10X_XL) && !defined(STM32F10X_CL)
 /* #define STM32F10X_LD */    /*!< STM32F10X_LD: STM32 Low density devices */
 /* #define STM32F10X_LD_VL */ /*!< STM32F10X_LD_VL: STM32 Low density Value Line devices */
-/* #define STM32F10X_MD */    /*!< STM32F10X_MD: STM32 Medium density devices */
+#define STM32F10X_MD          /*!< STM32F10X_MD: STM32 Medium density devices */
 /* #define STM32F10X_MD_VL */ /*!< STM32F10X_MD_VL: STM32 Medium density Value Line devices */
 /* #define STM32F10X_HD */    /*!< STM32F10X_HD: STM32 High density devices */
 /* #define STM32F10X_HD_VL */ /*!< STM32F10X_HD_VL: STM32 High density value line devices */
@@ -488,7 +488,8 @@ typedef enum IRQn {
 #include <stdint.h>
 
 #include "core_cm3.h"
-#include "system_stm32f10x.h"
+#include "system_stm32f1xx.h"
+// #include "system_stm32f10x.h"
 
 /** @addtogroup Exported_types
  * @{
@@ -2636,16 +2637,20 @@ typedef struct {
 #define AFIO_MAPR_CAN_REMAP_REMAP2 ((uint32_t)0x00004000) /*!< CANRX mapped to PB8, CANTX mapped to PB9 */
 #define AFIO_MAPR_CAN_REMAP_REMAP3 ((uint32_t)0x00006000) /*!< CANRX mapped to PD0, CANTX mapped to PD1 */
 
-#define AFIO_MAPR_PD01_REMAP ((uint32_t)0x00008000)         /*!< Port D0/Port D1 mapping on OSC_IN/OSC_OUT */
-#define AFIO_MAPR_TIM5CH4_IREMAP ((uint32_t)0x00010000)     /*!< TIM5 Channel4 Internal Remap */
-#define AFIO_MAPR_ADC1_ETRGINJ_REMAP ((uint32_t)0x00020000) /*!< ADC 1 External Trigger Injected Conversion remapping \
-                                                             */
-#define AFIO_MAPR_ADC1_ETRGREG_REMAP ((uint32_t)0x00040000) /*!< ADC 1 External Trigger Regular Conversion remapping \
-                                                             */
-#define AFIO_MAPR_ADC2_ETRGINJ_REMAP ((uint32_t)0x00080000) /*!< ADC 2 External Trigger Injected Conversion remapping \
-                                                             */
-#define AFIO_MAPR_ADC2_ETRGREG_REMAP ((uint32_t)0x00100000) /*!< ADC 2 External Trigger Regular Conversion remapping \
-                                                             */
+#define AFIO_MAPR_PD01_REMAP ((uint32_t)0x00008000)     /*!< Port D0/Port D1 mapping on OSC_IN/OSC_OUT */
+#define AFIO_MAPR_TIM5CH4_IREMAP ((uint32_t)0x00010000) /*!< TIM5 Channel4 Internal Remap */
+#define AFIO_MAPR_ADC1_ETRGINJ_REMAP                                                 \
+    ((uint32_t)0x00020000) /*!< ADC 1 External Trigger Injected Conversion remapping \
+                            */
+#define AFIO_MAPR_ADC1_ETRGREG_REMAP                                                \
+    ((uint32_t)0x00040000) /*!< ADC 1 External Trigger Regular Conversion remapping \
+                            */
+#define AFIO_MAPR_ADC2_ETRGINJ_REMAP                                                 \
+    ((uint32_t)0x00080000) /*!< ADC 2 External Trigger Injected Conversion remapping \
+                            */
+#define AFIO_MAPR_ADC2_ETRGREG_REMAP                                                \
+    ((uint32_t)0x00100000) /*!< ADC 2 External Trigger Regular Conversion remapping \
+                            */
 
 /*!< SWJ_CFG configuration */
 #define AFIO_MAPR_SWJ_CFG ((uint32_t)0x07000000)   /*!< SWJ_CFG[2:0] bits (Serial Wire JTAG configuration) */
@@ -2672,8 +2677,9 @@ typedef struct {
 #define AFIO_MAPR_SPI3_REMAP ((uint32_t)0x10000000) /*!< SPI3_REMAP bit (SPI3 remapping) */
 
 /*!< TIM2ITR1_IREMAP configuration */
-#define AFIO_MAPR_TIM2ITR1_IREMAP ((uint32_t)0x20000000) /*!< TIM2ITR1_IREMAP bit (TIM2 internal trigger 1 remapping) \
-                                                          */
+#define AFIO_MAPR_TIM2ITR1_IREMAP                                                       \
+    ((uint32_t)0x20000000) /*!< TIM2ITR1_IREMAP bit (TIM2 internal trigger 1 remapping) \
+                            */
 
 /*!< PTP_PPS_REMAP configuration */
 #define AFIO_MAPR_PTP_PPS_REMAP ((uint32_t)0x40000000) /*!< PTP_PPS_REMAP bit (Ethernet PTP PPS remapping) */
@@ -5536,7 +5542,8 @@ typedef struct {
 #define SDIO_STA_RXACT ((uint32_t)0x00002000)    /*!< Data receive in progress */
 #define SDIO_STA_TXFIFOHE \
     ((uint32_t)0x00004000) /*!< Transmit FIFO Half Empty: at least 8 words can be written into the FIFO */
-#define SDIO_STA_RXFIFOHF ((uint32_t)0x00008000) /*!< Receive FIFO Half Full: there are at least 8 words in the FIFO \
+#define SDIO_STA_RXFIFOHF                                                                                            \
+    ((uint32_t)0x00008000)                       /*!< Receive FIFO Half Full: there are at least 8 words in the FIFO \
                                                   */
 #define SDIO_STA_TXFIFOF ((uint32_t)0x00010000)  /*!< Transmit FIFO full */
 #define SDIO_STA_RXFIFOF ((uint32_t)0x00020000)  /*!< Receive FIFO full */
@@ -8120,13 +8127,15 @@ typedef struct {
 /* Bit definition for Ethernet MMC Receive Interrupt Register */
 #define ETH_MMCRIR_RGUFS \
     ((uint32_t)0x00020000) /* Set when Rx good unicast frames counter reaches half the maximum value */
-#define ETH_MMCRIR_RFAES ((uint32_t)0x00000040) /* Set when Rx alignment error counter reaches half the maximum value \
+#define ETH_MMCRIR_RFAES                                                                                              \
+    ((uint32_t)0x00000040)                      /* Set when Rx alignment error counter reaches half the maximum value \
                                                  */
 #define ETH_MMCRIR_RFCES ((uint32_t)0x00000020) /* Set when Rx crc error counter reaches half the maximum value */
 
 /* Bit definition for Ethernet MMC Transmit Interrupt Register */
-#define ETH_MMCTIR_TGFS ((uint32_t)0x00200000) /* Set when Tx good frame count counter reaches half the maximum value \
-                                                */
+#define ETH_MMCTIR_TGFS                                                                           \
+    ((uint32_t)0x00200000) /* Set when Tx good frame count counter reaches half the maximum value \
+                            */
 #define ETH_MMCTIR_TGFMSCS \
     ((uint32_t)0x00008000) /* Set when Tx good multi col counter reaches half the maximum value */
 #define ETH_MMCTIR_TGFSCS \
