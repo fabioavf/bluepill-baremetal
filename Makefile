@@ -9,7 +9,10 @@ PROJECT_ROOT := $(shell pwd)
 # TOOLSPATH ?= "/Applications/ARM/bin"
 
 # alternative macOS
-TOOLSPATH ?= "/Applications/ArmGNUToolchain/12.2.mpacbti-bet1/arm-none-eabi/bin"
+# TOOLSPATH ?= "/Applications/ArmGNUToolchain/12.2.mpacbti-bet1/arm-none-eabi/bin"
+
+# Linux
+TOOLSPATH ?= "/opt/arm-gnu-toolchain/bin"
 
 
 # STM32 board specification
