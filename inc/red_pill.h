@@ -78,7 +78,7 @@
 #define RPA_SW9 RPA_SW9_Msk
 #define RPB_SW10_Pos (8U)
 #define RPB_SW10_Msk (0x1U << RPB_SW10_Pos)
-#define RPB_SW10 RB_SW10_Msk
+#define RPB_SW10 RPB_SW10_Msk
 #define RPB_SW11_Pos (9U)
 #define RPB_SW11_Msk (0x1U << RPB_SW11_Pos)
 #define RPB_SW11 RPB_SW11_Msk

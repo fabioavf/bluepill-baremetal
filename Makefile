@@ -6,13 +6,13 @@ PROJECT_ROOT := $(shell pwd)
 # TOOLSPATH ?= "/c/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin"
 
 # macOS
-# TOOLSPATH ?= "/Applications/ARM/bin"
+TOOLSPATH ?= "/Applications/ARM/bin"
 
 # alternative macOS
 # TOOLSPATH ?= "/Applications/ArmGNUToolchain/12.2.mpacbti-bet1/arm-none-eabi/bin"
 
 # Linux
-TOOLSPATH ?= "/opt/arm-gnu-toolchain/bin"
+# TOOLSPATH ?= "/opt/arm-gnu-toolchain/bin"
 
 
 # STM32 board specification
