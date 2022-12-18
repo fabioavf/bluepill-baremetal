@@ -6,7 +6,6 @@
 #include "stm32f10x.h"
 
 bool isFirstOctave = true;
-bool isSwitchPressed = false;
 
 void configureTimers() {
     // enable timers' CCER channels which will be needed
@@ -26,6 +25,7 @@ void configureTimers() {
     TIM3->CCMR2 = TIM_CCMR2_OC3M | TIM_CCMR2_OC4M;
 
     TIM4->CCMR1 = TIM_CCMR1_OC1M | TIM_CCMR1_OC2M;
+    TIM4->CCMR2 = TIM_CCMR2_OC3M | TIM_CCMR2_OC4M;
 
     // configure prescaler for all timers
     TIM1->PSC = 72;
@@ -47,6 +47,8 @@ void configureTimers() {
     TIM3->CCR4 = 0;
     TIM4->CCR1 = 0;
     TIM4->CCR2 = 0;
+    TIM4->CCR3 = 0;
+    TIM4->CCR4 = 0;
 
     TIM1->CNT = 0;
     TIM2->CNT = 0;
@@ -122,12 +124,230 @@ void engageTimer(uint8_t note) {
 
             TIM2->CR1 = 0;
             break;
+        case 7:  // 187Hz
+            TIM3->ARR = 2674;
+            TIM3->CCR2 = 2674 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 8:  // 198Hz
+            TIM2->ARR = 2526;
+            TIM2->CCR2 = 2526 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 9:  // 209Hz
+            TIM3->ARR = 2392;
+            TIM3->CCR2 = 2392 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 10:  // 222Hz
+            TIM4->ARR = 2252;
+            TIM4->CCR3 = 2252 / 2;
+            TIM4->SR = 0;
+            TIM4->CR1 = 1;
+
+            while ((TIM4->SR & 0x1U) == 0)
+                ;
+
+            TIM4->CR1 = 0;
+            break;
+        case 11:  // 235Hz
+            TIM3->ARR = 2128;
+            TIM3->CCR2 = 2128 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 12:  // 249Hz
+            TIM4->ARR = 2008;
+            TIM4->CCR4 = 2008 / 2;
+            TIM4->SR = 0;
+            TIM4->CR1 = 1;
+
+            while ((TIM4->SR & 0x1U) == 0)
+                ;
+
+            TIM4->CR1 = 0;
+            break;
+        case 13:  // 132Hz
+            TIM2->ARR = 3788;
+            TIM2->CCR4 = 3788 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 14:  // 264Hz
+            TIM2->ARR = 1894;
+            TIM2->CCR2 = 1894 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 15:  // 280Hz
+            TIM2->ARR = 1786;
+            TIM2->CCR3 = 1786 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 16:  // 296Hz
+            TIM3->ARR = 1690;
+            TIM3->CCR1 = 1690 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 17:  // 314Hz
+            TIM3->ARR = 1592;
+            TIM3->CCR2 = 1592 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 18:  // 332Hz
+            TIM2->ARR = 1506;
+            TIM2->CCR2 = 1506 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 19:  // 352Hz
+            TIM2->ARR = 1420;
+            TIM2->CCR4 = 1420 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 20:  // 374Hz
+            TIM3->ARR = 1336;
+            TIM3->CCR2 = 1336 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 21:  // 396Hz
+            TIM2->ARR = 1264;
+            TIM2->CCR2 = 1264 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
+        case 22:  // 418Hz
+            TIM3->ARR = 1196;
+            TIM3->CCR2 = 1196 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 23:  // 444Hz
+            TIM4->ARR = 1126;
+            TIM4->CCR3 = 1126 / 2;
+            TIM4->SR = 0;
+            TIM4->CR1 = 1;
+
+            while ((TIM4->SR & 0x1U) == 0)
+                ;
+
+            TIM4->CR1 = 0;
+            break;
+        case 24:  // 470Hz
+            TIM3->ARR = 1064;
+            TIM3->CCR2 = 1064 / 2;
+            TIM3->SR = 0;
+            TIM3->CR1 = 1;
+
+            while ((TIM3->SR & 0x1U) == 0)
+                ;
+
+            TIM3->CR1 = 0;
+            break;
+        case 25:  // 498Hz
+            TIM4->ARR = 1004;
+            TIM4->CCR4 = 1004 / 2;
+            TIM4->SR = 0;
+            TIM4->CR1 = 1;
+
+            while ((TIM4->SR & 0x1U) == 0)
+                ;
+
+            TIM4->CR1 = 0;
+            break;
+        case 26:  // 280Hz
+            TIM2->ARR = 1786;
+            TIM2->CCR4 = 1786 / 2;
+            TIM2->SR = 0;
+            TIM2->CR1 = 1;
+
+            while ((TIM2->SR & 0x1U) == 0)
+                ;
+
+            TIM2->CR1 = 0;
+            break;
     }
 }
 
 void buzz(uint8_t note) {
-    isSwitchPressed = true;
-
     GPIOB->ODR ^= RPB_BUZZ;
 
     if (isFirstOctave) {
@@ -138,7 +358,8 @@ void buzz(uint8_t note) {
 }
 
 void main(void) {
-    uint32_t inputDataA, inputDataB, inputDataC;
+    uint32_t inputDataA, inputDataB, inputDataC, inputData;
+    bool octaveSelectorMemory = isFirstOctave;
 
     RCC->APB1ENR = RCC_APB1ENR_TIM2EN | RCC_APB1ENR_TIM3EN | RCC_APB1ENR_TIM4EN;
     RCC->APB2ENR =
@@ -157,6 +378,10 @@ void main(void) {
     GPIOB->ODR = 0x0;
 
     configureTimers();
+    lcd_init();
+    lcd_command(0x0c);
+
+    lcd_print("Oitava: 1");
 
     while (1) {
         inputDataA = ~GPIOA->IDR & (RPA_SW8 | RPA_SW9 | RPA_SW14);
@@ -164,38 +389,74 @@ void main(void) {
                                     RPB_SW11 | RPB_SW12 | RPB_SW13);
         inputDataC = ~GPIOC->IDR & (RPC_SW15 | RPC_SW16 | RPC_SW17);
 
-        switch (inputDataA) {
-            case RPA_SW14:
-                buzz(4);
-                break;
-            case RPA_SW8:
-                buzz(6);
-                break;
-            default:
-                isSwitchPressed = false;
-                break;
+        inputData = inputDataA | inputDataB | inputDataC;
+
+        if (isFirstOctave != octaveSelectorMemory) {
+            lcd_command(0x88);
+            lcd_data(isFirstOctave ? 0x31 : 0x32);
+            octaveSelectorMemory = isFirstOctave;
         }
 
-        switch (inputDataB) {
-            case RPB_SW5:
-                buzz(1);
-                break;
-            case RPB_SW13:
-                buzz(2);
-                break;
-            case RPB_SW6:
-                buzz(3);
-                break;
-            case RPB_SW7:
-                buzz(5);
-                break;
-            default:
-                isSwitchPressed = false;
-                break;
-        }
-
-        if (!isSwitchPressed) {
-            GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+        if (inputData == inputDataA) {
+            switch (inputDataA) {
+                case RPA_SW14:
+                    buzz(4);
+                    break;
+                case RPA_SW8:
+                    buzz(6);
+                    break;
+                case RPA_SW9:
+                    buzz(8);
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
+        } else if (inputData == inputDataB) {
+            switch (inputDataB) {
+                case RPB_SW5:
+                    buzz(1);
+                    break;
+                case RPB_SW13:
+                    buzz(2);
+                    break;
+                case RPB_SW6:
+                    buzz(3);
+                    break;
+                case RPB_SW7:
+                    buzz(5);
+                    break;
+                case RPB_SW10:
+                    buzz(10);
+                    break;
+                case RPB_SW11:
+                    buzz(12);
+                    break;
+                case RPB_SW12:
+                    buzz(13);
+                    break;
+                case RPB_SW2:
+                    isFirstOctave = !isFirstOctave;
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
+        } else if (inputData == inputDataC) {
+            switch (inputDataC) {
+                case RPC_SW15:
+                    buzz(7);
+                    break;
+                case RPC_SW16:
+                    buzz(9);
+                    break;
+                case RPC_SW17:
+                    buzz(11);
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
         }
     }
 }
