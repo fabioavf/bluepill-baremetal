@@ -11,7 +11,162 @@ bool isFirstOctave = true;
 uint8_t pwmLoad = 1;
 uint8_t debounceCounter = 0;
 
-void configureTimers() {
+void buzz(uint8_t note);
+void configure_timers();
+void cycle_pwm_load();
+void engage_timer(uint8_t note);
+
+uint16_t bin_bcd(uint16_t input) {
+    uint8_t shift = 0;
+    uint16_t output = 0;
+
+    while (input > 0) {
+        output |= (input % 10) << (shift++ << 2);
+        input /= 10;
+    }
+
+    return output;
+}
+
+void main(void) {
+    uint32_t inputDataA, inputDataB, inputDataC, inputData;
+    bool octaveSelectorMemory = isFirstOctave;
+    uint8_t pwmLoadMemory = pwmLoad;
+
+    RCC->APB1ENR = RCC_APB1ENR_TIM2EN | RCC_APB1ENR_TIM3EN | RCC_APB1ENR_TIM4EN;
+    RCC->APB2ENR =
+        RCC_APB2ENR_AFIOEN | RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | RCC_APB2ENR_IOPCEN | RCC_APB2ENR_TIM1EN;
+    AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
+
+    GPIOA->CRH = 0x34433443;
+    GPIOA->CRL = 0x43344444;
+
+    GPIOB->CRH = 0x44444444;
+    GPIOB->CRL = 0x44444443;
+
+    GPIOC->CRH = 0x44444444;
+    GPIOC->CRL = 0x44444444;
+
+    GPIOB->ODR = 0x0;
+
+    configure_timers();
+    lcd_init();
+
+    lcd_command(0x0c);
+    lcd_print("Oitava: 1");
+    lcd_command(0xc0);
+    lcd_print("Load: 25%");
+
+    while (1) {
+        inputDataA = ~GPIOA->IDR & (RPA_SW8 | RPA_SW9 | RPA_SW14);
+        inputDataB = ~GPIOB->IDR & (RPB_SW1 | RPB_SW2 | RPB_SW3 | RPB_SW4 | RPB_SW5 | RPB_SW6 | RPB_SW7 | RPB_SW10 |
+                                    RPB_SW11 | RPB_SW12 | RPB_SW13);
+        inputDataC = ~GPIOC->IDR & (RPC_SW15 | RPC_SW16 | RPC_SW17);
+
+        inputData = inputDataA | inputDataB | inputDataC;
+
+        if (isFirstOctave != octaveSelectorMemory) {
+            if (debounceCounter > DEBOUNCE_TIMES) {
+                lcd_command(0x88);
+                lcd_data(isFirstOctave ? 0x31 : 0x32);
+                octaveSelectorMemory = isFirstOctave;
+                debounceCounter = 0;
+            } else {
+                debounceCounter++;
+            }
+        }
+
+        if (pwmLoad != pwmLoadMemory) {
+            if (debounceCounter > DEBOUNCE_TIMES) {
+                lcd_command(0xc6);
+
+                switch (pwmLoad) {
+                    case 1:
+                        lcd_print("25%");
+                        break;
+                    case 2:
+                        lcd_print("50%");
+                        break;
+                    case 3:
+                        lcd_print("75%");
+                        break;
+                }
+
+                pwmLoadMemory = pwmLoad;
+                debounceCounter = 0;
+            } else {
+                debounceCounter++;
+            }
+        }
+
+        if (inputData == inputDataA) {
+            switch (inputDataA) {
+                case RPA_SW14:
+                    buzz(4);
+                    break;
+                case RPA_SW8:
+                    buzz(6);
+                    break;
+                case RPA_SW9:
+                    buzz(8);
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
+        } else if (inputData == inputDataB) {
+            switch (inputDataB) {
+                case RPB_SW3:
+                    cycle_pwm_load();
+                    break;
+                case RPB_SW5:
+                    buzz(1);
+                    break;
+                case RPB_SW13:
+                    buzz(2);
+                    break;
+                case RPB_SW6:
+                    buzz(3);
+                    break;
+                case RPB_SW7:
+                    buzz(5);
+                    break;
+                case RPB_SW10:
+                    buzz(10);
+                    break;
+                case RPB_SW11:
+                    buzz(12);
+                    break;
+                case RPB_SW12:
+                    buzz(13);
+                    break;
+                case RPB_SW2:
+                    isFirstOctave = !isFirstOctave;
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
+        } else if (inputData == inputDataC) {
+            switch (inputDataC) {
+                case RPC_SW15:
+                    buzz(7);
+                    break;
+                case RPC_SW16:
+                    buzz(9);
+                    break;
+                case RPC_SW17:
+                    buzz(11);
+                    break;
+                default:
+                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
+                    break;
+            }
+        }
+    }
+}
+
+void configure_timers() {
     // enable timers' CCER channels which will be needed
     TIM1->CCER = TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E;
     TIM2->CCER = TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E;
@@ -60,7 +215,7 @@ void configureTimers() {
     TIM4->CNT = 0;
 }
 
-void engageTimer(uint8_t note) {
+void engage_timer(uint8_t note) {
     switch (note) {
         case 1:  // 132Hz
             TIM2->ARR = 3788;
@@ -355,13 +510,13 @@ void buzz(uint8_t note) {
     GPIOB->ODR ^= RPB_BUZZ;
 
     if (isFirstOctave) {
-        engageTimer(note);
+        engage_timer(note);
     } else {
-        engageTimer(note + 13);
+        engage_timer(note + 13);
     }
 }
 
-void cyclePwmLoad() {
+void cycle_pwm_load() {
     if (debounceCounter > DEBOUNCE_TIMES) {
         switch (pwmLoad) {
             case 1:
@@ -377,143 +532,5 @@ void cyclePwmLoad() {
         debounceCounter = 0;
     } else {
         debounceCounter++;
-    }
-}
-
-void main(void) {
-    uint32_t inputDataA, inputDataB, inputDataC, inputData;
-    bool octaveSelectorMemory = isFirstOctave;
-    uint8_t pwmLoadMemory = pwmLoad;
-
-    RCC->APB1ENR = RCC_APB1ENR_TIM2EN | RCC_APB1ENR_TIM3EN | RCC_APB1ENR_TIM4EN;
-    RCC->APB2ENR =
-        RCC_APB2ENR_AFIOEN | RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | RCC_APB2ENR_IOPCEN | RCC_APB2ENR_TIM1EN;
-    AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
-
-    GPIOA->CRH = 0x34433443;
-    GPIOA->CRL = 0x43344444;
-
-    GPIOB->CRH = 0x44444444;
-    GPIOB->CRL = 0x44444443;
-
-    GPIOC->CRH = 0x44444444;
-    GPIOC->CRL = 0x44444444;
-
-    GPIOB->ODR = 0x0;
-
-    configureTimers();
-    lcd_init();
-
-    lcd_command(0x0c);
-    lcd_print("Oitava: 1");
-    lcd_command(0xc0);
-    lcd_print("Load: 25%");
-
-    while (1) {
-        inputDataA = ~GPIOA->IDR & (RPA_SW8 | RPA_SW9 | RPA_SW14);
-        inputDataB = ~GPIOB->IDR & (RPB_SW1 | RPB_SW2 | RPB_SW3 | RPB_SW4 | RPB_SW5 | RPB_SW6 | RPB_SW7 | RPB_SW10 |
-                                    RPB_SW11 | RPB_SW12 | RPB_SW13);
-        inputDataC = ~GPIOC->IDR & (RPC_SW15 | RPC_SW16 | RPC_SW17);
-
-        inputData = inputDataA | inputDataB | inputDataC;
-
-        if (isFirstOctave != octaveSelectorMemory) {
-            if (debounceCounter > DEBOUNCE_TIMES) {
-                lcd_command(0x88);
-                lcd_data(isFirstOctave ? 0x31 : 0x32);
-                octaveSelectorMemory = isFirstOctave;
-                debounceCounter = 0;
-            } else {
-                debounceCounter++;
-            }
-        }
-
-        if (pwmLoad != pwmLoadMemory) {
-            if (debounceCounter > DEBOUNCE_TIMES) {
-                lcd_command(0xc6);
-
-                switch (pwmLoad) {
-                    case 1:
-                        lcd_print("25%");
-                        break;
-                    case 2:
-                        lcd_print("50%");
-                        break;
-                    case 3:
-                        lcd_print("75%");
-                        break;
-                }
-
-                pwmLoadMemory = pwmLoad;
-                debounceCounter = 0;
-            } else {
-                debounceCounter++;
-            }
-        }
-
-        if (inputData == inputDataA) {
-            switch (inputDataA) {
-                case RPA_SW14:
-                    buzz(4);
-                    break;
-                case RPA_SW8:
-                    buzz(6);
-                    break;
-                case RPA_SW9:
-                    buzz(8);
-                    break;
-                default:
-                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
-                    break;
-            }
-        } else if (inputData == inputDataB) {
-            switch (inputDataB) {
-                case RPB_SW3:
-                    cyclePwmLoad();
-                    break;
-                case RPB_SW5:
-                    buzz(1);
-                    break;
-                case RPB_SW13:
-                    buzz(2);
-                    break;
-                case RPB_SW6:
-                    buzz(3);
-                    break;
-                case RPB_SW7:
-                    buzz(5);
-                    break;
-                case RPB_SW10:
-                    buzz(10);
-                    break;
-                case RPB_SW11:
-                    buzz(12);
-                    break;
-                case RPB_SW12:
-                    buzz(13);
-                    break;
-                case RPB_SW2:
-                    isFirstOctave = !isFirstOctave;
-                    break;
-                default:
-                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
-                    break;
-            }
-        } else if (inputData == inputDataC) {
-            switch (inputDataC) {
-                case RPC_SW15:
-                    buzz(7);
-                    break;
-                case RPC_SW16:
-                    buzz(9);
-                    break;
-                case RPC_SW17:
-                    buzz(11);
-                    break;
-                default:
-                    GPIOB->ODR &= 0xFFFFFFFF & !RPB_BUZZ;
-                    break;
-            }
-        }
     }
 }

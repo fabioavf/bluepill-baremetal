@@ -3,6 +3,8 @@
   "C_Cpp.errorSquiggles": "Disabled",
   "files.associations": {
     "stdint.h": "c",
-    "red_pill.h": "c"
+    "red_pill.h": "c",
+    "*.tcc": "c",
+    "typeinfo": "c"
   }
 }
