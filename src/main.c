@@ -5,7 +5,11 @@
 #include "red_pill.h"
 #include "stm32f10x.h"
 
+#define DEBOUNCE_TIMES 50  // number of times switch HI has to be read before counting as a press
+
 bool isFirstOctave = true;
+uint8_t pwmLoad = 1;
+uint8_t debounceCounter = 0;
 
 void configureTimers() {
     // enable timers' CCER channels which will be needed
@@ -60,7 +64,7 @@ void engageTimer(uint8_t note) {
     switch (note) {
         case 1:  // 132Hz
             TIM2->ARR = 3788;
-            TIM2->CCR2 = 3788 / 2;
+            TIM2->CCR2 = (3788 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -71,7 +75,7 @@ void engageTimer(uint8_t note) {
             break;
         case 2:  // 140Hz
             TIM2->ARR = 3572;
-            TIM2->CCR3 = 3572 / 2;
+            TIM2->CCR3 = (3572 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -82,7 +86,7 @@ void engageTimer(uint8_t note) {
             break;
         case 3:  // 148Hz
             TIM3->ARR = 3378;
-            TIM3->CCR1 = 3378 / 2;
+            TIM3->CCR1 = (3378 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -93,7 +97,7 @@ void engageTimer(uint8_t note) {
             break;
         case 4:  // 157Hz
             TIM3->ARR = 3186;
-            TIM3->CCR2 = 3186 / 2;
+            TIM3->CCR2 = (3186 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -104,7 +108,7 @@ void engageTimer(uint8_t note) {
             break;
         case 5:  // 166Hz
             TIM2->ARR = 3012;
-            TIM2->CCR2 = 3012 / 2;
+            TIM2->CCR2 = (3012 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -115,7 +119,7 @@ void engageTimer(uint8_t note) {
             break;
         case 6:  // 176Hz
             TIM2->ARR = 2842;
-            TIM2->CCR4 = 2842 / 2;
+            TIM2->CCR4 = (2842 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -126,7 +130,7 @@ void engageTimer(uint8_t note) {
             break;
         case 7:  // 187Hz
             TIM3->ARR = 2674;
-            TIM3->CCR2 = 2674 / 2;
+            TIM3->CCR2 = (2674 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -137,7 +141,7 @@ void engageTimer(uint8_t note) {
             break;
         case 8:  // 198Hz
             TIM2->ARR = 2526;
-            TIM2->CCR2 = 2526 / 2;
+            TIM2->CCR2 = (2526 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -148,7 +152,7 @@ void engageTimer(uint8_t note) {
             break;
         case 9:  // 209Hz
             TIM3->ARR = 2392;
-            TIM3->CCR2 = 2392 / 2;
+            TIM3->CCR2 = (2392 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -159,7 +163,7 @@ void engageTimer(uint8_t note) {
             break;
         case 10:  // 222Hz
             TIM4->ARR = 2252;
-            TIM4->CCR3 = 2252 / 2;
+            TIM4->CCR3 = (2252 / 4) * pwmLoad;
             TIM4->SR = 0;
             TIM4->CR1 = 1;
 
@@ -170,7 +174,7 @@ void engageTimer(uint8_t note) {
             break;
         case 11:  // 235Hz
             TIM3->ARR = 2128;
-            TIM3->CCR2 = 2128 / 2;
+            TIM3->CCR2 = (2128 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -181,7 +185,7 @@ void engageTimer(uint8_t note) {
             break;
         case 12:  // 249Hz
             TIM4->ARR = 2008;
-            TIM4->CCR4 = 2008 / 2;
+            TIM4->CCR4 = (2008 / 4) * pwmLoad;
             TIM4->SR = 0;
             TIM4->CR1 = 1;
 
@@ -192,7 +196,7 @@ void engageTimer(uint8_t note) {
             break;
         case 13:  // 132Hz
             TIM2->ARR = 3788;
-            TIM2->CCR4 = 3788 / 2;
+            TIM2->CCR4 = (3788 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -203,7 +207,7 @@ void engageTimer(uint8_t note) {
             break;
         case 14:  // 264Hz
             TIM2->ARR = 1894;
-            TIM2->CCR2 = 1894 / 2;
+            TIM2->CCR2 = (1894 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -214,7 +218,7 @@ void engageTimer(uint8_t note) {
             break;
         case 15:  // 280Hz
             TIM2->ARR = 1786;
-            TIM2->CCR3 = 1786 / 2;
+            TIM2->CCR3 = (1786 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -225,7 +229,7 @@ void engageTimer(uint8_t note) {
             break;
         case 16:  // 296Hz
             TIM3->ARR = 1690;
-            TIM3->CCR1 = 1690 / 2;
+            TIM3->CCR1 = (1690 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -236,7 +240,7 @@ void engageTimer(uint8_t note) {
             break;
         case 17:  // 314Hz
             TIM3->ARR = 1592;
-            TIM3->CCR2 = 1592 / 2;
+            TIM3->CCR2 = (1592 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -247,7 +251,7 @@ void engageTimer(uint8_t note) {
             break;
         case 18:  // 332Hz
             TIM2->ARR = 1506;
-            TIM2->CCR2 = 1506 / 2;
+            TIM2->CCR2 = (1506 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -258,7 +262,7 @@ void engageTimer(uint8_t note) {
             break;
         case 19:  // 352Hz
             TIM2->ARR = 1420;
-            TIM2->CCR4 = 1420 / 2;
+            TIM2->CCR4 = (1420 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -269,7 +273,7 @@ void engageTimer(uint8_t note) {
             break;
         case 20:  // 374Hz
             TIM3->ARR = 1336;
-            TIM3->CCR2 = 1336 / 2;
+            TIM3->CCR2 = (1336 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -280,7 +284,7 @@ void engageTimer(uint8_t note) {
             break;
         case 21:  // 396Hz
             TIM2->ARR = 1264;
-            TIM2->CCR2 = 1264 / 2;
+            TIM2->CCR2 = (1264 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -291,7 +295,7 @@ void engageTimer(uint8_t note) {
             break;
         case 22:  // 418Hz
             TIM3->ARR = 1196;
-            TIM3->CCR2 = 1196 / 2;
+            TIM3->CCR2 = (1196 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -302,7 +306,7 @@ void engageTimer(uint8_t note) {
             break;
         case 23:  // 444Hz
             TIM4->ARR = 1126;
-            TIM4->CCR3 = 1126 / 2;
+            TIM4->CCR3 = (1126 / 4) * pwmLoad;
             TIM4->SR = 0;
             TIM4->CR1 = 1;
 
@@ -313,7 +317,7 @@ void engageTimer(uint8_t note) {
             break;
         case 24:  // 470Hz
             TIM3->ARR = 1064;
-            TIM3->CCR2 = 1064 / 2;
+            TIM3->CCR2 = (1064 / 4) * pwmLoad;
             TIM3->SR = 0;
             TIM3->CR1 = 1;
 
@@ -324,7 +328,7 @@ void engageTimer(uint8_t note) {
             break;
         case 25:  // 498Hz
             TIM4->ARR = 1004;
-            TIM4->CCR4 = 1004 / 2;
+            TIM4->CCR4 = (1004 / 4) * pwmLoad;
             TIM4->SR = 0;
             TIM4->CR1 = 1;
 
@@ -335,7 +339,7 @@ void engageTimer(uint8_t note) {
             break;
         case 26:  // 280Hz
             TIM2->ARR = 1786;
-            TIM2->CCR4 = 1786 / 2;
+            TIM2->CCR4 = (1786 / 4) * pwmLoad;
             TIM2->SR = 0;
             TIM2->CR1 = 1;
 
@@ -357,9 +361,29 @@ void buzz(uint8_t note) {
     }
 }
 
+void cyclePwmLoad() {
+    if (debounceCounter > DEBOUNCE_TIMES) {
+        switch (pwmLoad) {
+            case 1:
+                pwmLoad++;
+                break;
+            case 2:
+                pwmLoad++;
+                break;
+            case 3:
+                pwmLoad = 1;
+                break;
+        }
+        debounceCounter = 0;
+    } else {
+        debounceCounter++;
+    }
+}
+
 void main(void) {
     uint32_t inputDataA, inputDataB, inputDataC, inputData;
     bool octaveSelectorMemory = isFirstOctave;
+    uint8_t pwmLoadMemory = pwmLoad;
 
     RCC->APB1ENR = RCC_APB1ENR_TIM2EN | RCC_APB1ENR_TIM3EN | RCC_APB1ENR_TIM4EN;
     RCC->APB2ENR =
@@ -379,9 +403,11 @@ void main(void) {
 
     configureTimers();
     lcd_init();
-    lcd_command(0x0c);
 
+    lcd_command(0x0c);
     lcd_print("Oitava: 1");
+    lcd_command(0xc0);
+    lcd_print("Load: 25%");
 
     while (1) {
         inputDataA = ~GPIOA->IDR & (RPA_SW8 | RPA_SW9 | RPA_SW14);
@@ -392,9 +418,37 @@ void main(void) {
         inputData = inputDataA | inputDataB | inputDataC;
 
         if (isFirstOctave != octaveSelectorMemory) {
-            lcd_command(0x88);
-            lcd_data(isFirstOctave ? 0x31 : 0x32);
-            octaveSelectorMemory = isFirstOctave;
+            if (debounceCounter > DEBOUNCE_TIMES) {
+                lcd_command(0x88);
+                lcd_data(isFirstOctave ? 0x31 : 0x32);
+                octaveSelectorMemory = isFirstOctave;
+                debounceCounter = 0;
+            } else {
+                debounceCounter++;
+            }
+        }
+
+        if (pwmLoad != pwmLoadMemory) {
+            if (debounceCounter > DEBOUNCE_TIMES) {
+                lcd_command(0xc6);
+
+                switch (pwmLoad) {
+                    case 1:
+                        lcd_print("25%");
+                        break;
+                    case 2:
+                        lcd_print("50%");
+                        break;
+                    case 3:
+                        lcd_print("75%");
+                        break;
+                }
+
+                pwmLoadMemory = pwmLoad;
+                debounceCounter = 0;
+            } else {
+                debounceCounter++;
+            }
         }
 
         if (inputData == inputDataA) {
@@ -414,6 +468,9 @@ void main(void) {
             }
         } else if (inputData == inputDataB) {
             switch (inputDataB) {
+                case RPB_SW3:
+                    cyclePwmLoad();
+                    break;
                 case RPB_SW5:
                     buzz(1);
                     break;
