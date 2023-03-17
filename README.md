@@ -1,4 +1,4 @@
-# Absolute minimum bare metal STM32F103C6 project
+# Absolute minimum bare metal STM32F103C6 project!
 
 This project aims to be the absolute bare minimum of files required to get something to run on an STM32F103C6 board, known as the 'Blue Pill'. The 'bare metal' in the project name refers to the fact that there is no operating system being used, the binary is being run directly when the board boots up.
 
